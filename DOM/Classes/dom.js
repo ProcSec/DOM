@@ -61,7 +61,7 @@ export default class DOM {
         const sharedStorage = this.storage
 
         prop.forEach((p) => {
-            if (p.required || Object.prototype.hasOwnProperty.call(o, p.name)) {
+            if (p.required || p.name in o) {
                 let r
                 const rewrite = (value) => {
                     o[p.name] = value
