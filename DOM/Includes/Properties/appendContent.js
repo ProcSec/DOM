@@ -9,7 +9,8 @@ export default (() => {
         return data.element
     }
 
-    const handler = (data) => {
+    function handler(data) {
+        const self = this
         if (data.element.get("nodeType") !== 1) error()
 
         if (!Array.isArray(data.value)) data.value = [data.value]
@@ -28,12 +29,20 @@ export default (() => {
                 if (DOMController.errorIgnore(unique)) return
                 throw new Error("Can't apply not DOM-class object")
             }
+            item.parent = self
+            self.content.add(item)
             data.element.render(item)
         })
 
         data.event.on("render", () => {
-            data.value.forEach((e) => {
+            data.content.forEach((e) => {
                 if (typeof e.emitEvent === "function") { e.emitEvent("render", { asContent: true }) }
+            })
+        })
+
+        data.event.on("clear", () => {
+            data.content.forEach((e) => {
+                if (typeof e.emitEvent === "function") { e.emitEvent("clear", { asContent: true }) }
             })
         })
 

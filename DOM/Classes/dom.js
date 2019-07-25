@@ -12,6 +12,10 @@ export default class DOM {
 
     events = Object.create(null)
 
+    parent = null
+
+    content = new Set()
+
     constructor(object) {
         new FieldChecker({ type: "object" }).set(object)
         this.object = object

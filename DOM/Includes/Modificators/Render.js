@@ -10,6 +10,7 @@ DOMController.registerModificator({
                 if (e === null) return
                 if (typeof e === "string") e = new DOM({ type: "text", new: e })
                 this.elementParse.render(e)
+                this.content.add(e)
             } catch (er) {
                 Report.write("Render error", er)
             }
