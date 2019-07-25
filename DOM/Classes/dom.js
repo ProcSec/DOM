@@ -21,6 +21,18 @@ export default class DOM {
         this.object = object
 
         this.onEvent("render", (c = {}) => (c.asContent ? this._moduleWorkerOnRender : () => {}))
+        this.onEvent("render", () => {
+            this.content.forEach((e) => {
+                if (typeof e.emitEvent === "function") { e.emitEvent("render", { asContent: true }) }
+            })
+        })
+
+        this.onEvent("clear", () => {
+            this.content.forEach((e) => {
+                if (typeof e.emitEvent === "function") { e.emitEvent("clear", { asContent: true }) }
+            })
+        })
+
         this._propertyWorker()
     }
 

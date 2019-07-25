@@ -34,18 +34,6 @@ export default (() => {
             data.element.render(item)
         })
 
-        data.event.on("render", () => {
-            data.content.forEach((e) => {
-                if (typeof e.emitEvent === "function") { e.emitEvent("render", { asContent: true }) }
-            })
-        })
-
-        data.event.on("clear", () => {
-            data.content.forEach((e) => {
-                if (typeof e.emitEvent === "function") { e.emitEvent("clear", { asContent: true }) }
-            })
-        })
-
         return data.element
     }
 

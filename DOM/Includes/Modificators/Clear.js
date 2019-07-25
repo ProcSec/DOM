@@ -5,6 +5,7 @@ DOMController.registerModificator({
     handler(...a) {
         this.emitEvent("clear", {})
         this.elementParse.clear()
+        this.content.clear()
         this.emitEvent("cleared", {})
         this.render(...a)
         this.emitEvent("clear-rendered", {})
