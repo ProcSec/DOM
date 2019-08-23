@@ -4,10 +4,10 @@ import Linear from "../Library/Timing/linear"
 
 export default class Animation {
     constructor({
-        duration, painter, init = () => { }, end = () => { }, timingFunc = Linear,
+        duration, painter = () => { }, init = () => { }, end = () => { }, timingFunc = Linear,
     }) {
         new FieldsContainer([
-            ["duration", "painter", "timingFunc"],
+            ["duration", "timingFunc"],
             {
                 duration: new FieldChecker({ type: "number", isInt: "true" }),
                 painter: new FieldChecker({ type: "function" }),

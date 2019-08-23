@@ -12,6 +12,9 @@ DOMController.registerModificator({
             remove(...a) {
                 return self.elementParse.native.classList.remove(...a)
             },
+            toggle(...a) {
+                return self.elementParse.native.classList.toggle(...a)
+            },
             list() {
                 return self.elementParse.native.classList
             },
