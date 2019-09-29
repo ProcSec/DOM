@@ -60,4 +60,14 @@ export default class Animation {
         this.animate(...data)
             .then(e => callback(e))
     }
+
+    applyChain(...data) {
+        this.animate(...data)
+        return this
+    }
+
+    async applyWaitChain(...data) {
+        await this.animate(...data)
+        return this
+    }
 }
