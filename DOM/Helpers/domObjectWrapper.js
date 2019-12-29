@@ -32,12 +32,12 @@ const DOMObjectWrapper = (El) => {
             writable: false,
         },
         prepend: {
-            value: (e) => {
+            value(e) {
                 if (!(e instanceof DOM)) throw new TypeError("Can't render not-DOM element, use native methods")
                 e.emitEvent("render", {})
                 const ch = El.children[0]
                 if (ch) {
-                    DOMObjectWrapper(ch).insertBefore(e)
+                    this.insertBefore(e, ch)
                 } else {
                     this.render(e)
                 }
@@ -46,10 +46,10 @@ const DOMObjectWrapper = (El) => {
             writable: false,
         },
         insertBefore: {
-            value: (e) => {
+            value: (e, ch) => {
                 if (!(e instanceof DOM)) throw new TypeError("Can't render not-DOM element, use native methods")
                 e.emitEvent("render", {})
-                El.insertBefore(Object.getPrototypeOf(e.elementParse))
+                El.insertBefore(Object.getPrototypeOf(e.elementParse), ch)
                 e.emitEvent("rendered", {})
             },
             writable: false,
