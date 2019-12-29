@@ -39,10 +39,10 @@ export default class DOMController {
         let compMethod
 
         if (this._settings.config.useFunctionsComparation) {
-            compMethod = v => v.handler.toString() === property.handler.toString()
+            compMethod = (v) => v.handler.toString() === property.handler.toString()
                 && v.error.toString() === property.error.toString()
         } else {
-            compMethod = v => v.unique === property.unique
+            compMethod = (v) => v.unique === property.unique
         }
 
         const uncomp = this._settings.properties.findIndex(compMethod)

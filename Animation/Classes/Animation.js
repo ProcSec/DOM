@@ -58,7 +58,7 @@ export default class Animation {
 
     applyCallback({ data = [], callback = () => { } }) {
         this.animate(...data)
-            .then(e => callback(e))
+            .then((e) => callback(e))
     }
 
     applyChain(...data) {

@@ -77,7 +77,7 @@ const DOMObjectWrapper = (El) => {
             writable: false,
         },
         get: {
-            value: e => toTheBottom(El, e),
+            value: (e) => toTheBottom(El, e),
             writable: false,
         },
     }
