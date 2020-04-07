@@ -49,7 +49,16 @@ const DOMObjectWrapper = (El) => {
             value: (e, ch) => {
                 if (!(e instanceof DOM)) throw new TypeError("Can't render not-DOM element, use native methods")
                 e.emitEvent("render", {})
-                El.insertBefore(Object.getPrototypeOf(e.elementParse), ch)
+                El.before(Object.getPrototypeOf(e.elementParse))
+                e.emitEvent("rendered", {})
+            },
+            writable: false,
+        },
+        insertAfter: {
+            value: (e, ch) => {
+                if (!(e instanceof DOM)) throw new TypeError("Can't render not-DOM element, use native methods")
+                e.emitEvent("render", {})
+                El.after(Object.getPrototypeOf(e.elementParse))
                 e.emitEvent("rendered", {})
             },
             writable: false,

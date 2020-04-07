@@ -2,11 +2,11 @@ import FieldsContainer from "../../../Tools/validation/fieldsContainer"
 import FieldChecker from "../../../Tools/validation/fieldChecker"
 import DomRegisteredProperty from "../Classes/domRegisteredProperty"
 import DomRegisteredModule from "../Classes/domRegisteredModule"
-import Report from "../../../Services/report"
+import Report from "../../../Services/reportOld"
 import DOM from "../Classes/dom"
 
 export default class DOMController {
-    static _settings = {
+    static #settings = {
         modules: [
 
         ],
@@ -24,7 +24,7 @@ export default class DOMController {
 
     // #region Properties
     static registerProperty(property) {
-        if (this._settings.config.reportRegistration === true) Report.write("New DOM property: ", property)
+        if (this.#settings.config.reportRegistration === true) Report.write("New DOM property: ", property)
         new FieldsContainer([
             ["name", "required", "handler", "error", "unique"],
             {
@@ -38,18 +38,18 @@ export default class DOMController {
 
         let compMethod
 
-        if (this._settings.config.useFunctionsComparation) {
+        if (this.#settings.config.useFunctionsComparation) {
             compMethod = (v) => v.handler.toString() === property.handler.toString()
                 && v.error.toString() === property.error.toString()
         } else {
             compMethod = (v) => v.unique === property.unique
         }
 
-        const uncomp = this._settings.properties.findIndex(compMethod)
+        const uncomp = this.#settings.properties.findIndex(compMethod)
         if (uncomp !== -1) throw new Error(`Property is already registered with ID ${uncomp}`)
 
-        const id = this._settings.properties.length
-        this._settings.properties.push(property)
+        const id = this.#settings.properties.length
+        this.#settings.properties.push(property)
 
         return new DomRegisteredProperty(id)
     }
@@ -57,13 +57,13 @@ export default class DOMController {
     static getPropertyData(id) {
         new FieldChecker({ isInt: true }).set(id)
 
-        const g = this._settings.properties[id]
+        const g = this.#settings.properties[id]
         if (typeof g === "object") return g
         return false
     }
 
     static getProperties() {
-        return this._settings.properties
+        return this.#settings.properties
     }
 
     // #endregion
@@ -77,8 +77,8 @@ export default class DOMController {
             },
         ]).set(module)
 
-        const id = this._settings.modules.length
-        this._settings.modules.push()
+        const id = this.#settings.modules.length
+        this.#settings.modules.push()
 
         return new DomRegisteredModule(id)
     }
@@ -86,28 +86,28 @@ export default class DOMController {
     static getModuleData(id) {
         new FieldChecker({ isInt: true }).set(id)
 
-        const g = this._settings.modules[id]
+        const g = this.#settings.modules[id]
         if (typeof g === "object") return g
         return false
     }
 
     static getModules() {
-        return this._settings.modules
+        return this.#settings.modules
     }
 
     // #endregion
 
     static get config() {
-        return this._settings.config
+        return this.#settings.config
     }
 
     static setConfig(v) {
         new FieldChecker({ type: "object" }).set(v)
-        this._settings.config = { ...this._settings.config, ...v }
+        this.#settings.config = { ...this.#settings.config, ...v }
     }
 
     static errorIgnore(s) {
-        const g = this._settings.errorsIgnore
+        const g = this.#settings.errorsIgnore
         const def = false
         s = s.toString()
         if (typeof g === "boolean") return g
@@ -121,11 +121,11 @@ export default class DOMController {
 
     static setErrorIgnore(n) {
         if (typeof n === "boolean") {
-            this._settings.errorsIgnore = n
+            this.#settings.errorsIgnore = n
             return true
         }
         new FieldsContainer(["array", new FieldChecker({ type: "string" })]).set(n)
-        this._settings.errorsIgnore = n
+        this.#settings.errorsIgnore = n
         return true
     }
 
@@ -146,7 +146,7 @@ export default class DOMController {
             name,
         })
 
-        if (this._settings.modificators[name] !== undefined
+        if (this.#settings.modificators[name] !== undefined
             || name in DOM.prototype) throw new Error(`Method ${name} is already declared`)
 
         Object.defineProperty(DOM.prototype, name,
@@ -156,18 +156,18 @@ export default class DOMController {
                 ...(set ? { set } : {}),
             })
 
-        this._settings.modificators[name] = handler
+        this.#settings.modificators[name] = handler
     }
 
     static getModificator(name) {
-        if (!(name in this._settings.modificators) || typeof this._settings.modificators[name] !== "function") {
+        if (!(name in this.#settings.modificators) || typeof this.#settings.modificators[name] !== "function") {
             throw new Error("Incorrect modificator")
         }
 
-        return this._settings.modificators[name]
+        return this.#settings.modificators[name]
     }
 
     static getModificators() {
-        return this._settings.modificators
+        return this.#settings.modificators
     }
 }

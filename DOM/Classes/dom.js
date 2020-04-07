@@ -1,7 +1,7 @@
 import FieldChecker from "../../../Tools/validation/fieldChecker"
 import DOMController from "../Helpers/domController"
 import FieldsContainer from "../../../Tools/validation/fieldsContainer"
-import Report from "../../../Services/report"
+import Report from "../../../Services/reportOld"
 
 export default class DOM {
     elementParse = null
@@ -20,7 +20,7 @@ export default class DOM {
         new FieldChecker({ type: "object" }).set(object)
         this.object = object
 
-        this.onEvent("render", (c = {}) => (c.asContent ? this._moduleWorkerOnRender : () => {}))
+        this.onEvent("render", (c = {}) => (c.asContent ? this.moduleWorkerOnRender : () => {}))
         this.onEvent("render", () => {
             this.content.forEach((e) => {
                 if (typeof e.emitEvent === "function") { e.emitEvent("render", { asContent: true }) }
@@ -33,7 +33,7 @@ export default class DOM {
             })
         })
 
-        this._propertyWorker()
+        this.propertyWorker()
     }
 
     onEvent(event, handler) {
@@ -70,7 +70,7 @@ export default class DOM {
         })
     }
 
-    _propertyWorker() {
+    propertyWorker() {
         const o = this.object
         const prop = DOMController.getProperties()
         let el = this.elementParse
@@ -122,7 +122,7 @@ export default class DOM {
         this.storage = sharedStorage
     }
 
-    _moduleWorkerOnRender() {
+    moduleWorkerOnRender() {
         const o = this.object
         const prop = DOMController.getModules()
         let el = this.elementParse
