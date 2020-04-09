@@ -11,7 +11,7 @@ export default (() => {
     }
 
     const handler = (data) => {
-        if (data.element.get("nodeType") !== 1) {
+        if (data.element.native.nodeType !== 1) {
             error()
             return data.element
         }

@@ -5,13 +5,13 @@ export default (() => {
     const unique = "appendContent"
 
     const error = (data) => {
-        if (!DOMController.errorIgnore(unique)) throw new Error(`Content of type ${typeof data.value} and not DOM instance is unapplicapable to this nodeType: ${data.element.get("nodeType")}`)
+        if (!DOMController.errorIgnore(unique)) throw new Error(`Content of type ${typeof data.value} and not DOM instance is unapplicapable to this nodeType: ${data.element.native.nodeType}`)
         return data.element
     }
 
     function handler(data) {
         const self = this
-        if (data.element.get("nodeType") !== 1) error()
+        if (data.element.native.nodeType !== 1) error()
 
         if (!Array.isArray(data.value)) data.value = [data.value]
 
