@@ -1,6 +1,4 @@
 import DOMController from "@DOMPath/DOM/Helpers/domController"
-import FieldsContainer from "@Core/Tools/validation/fieldsContainer"
-import FieldChecker from "@Core/Tools/validation/fieldChecker"
 
 export default (() => {
     const unique = "eventsSetter"
@@ -18,22 +16,12 @@ export default (() => {
         let w = data.value
         if (!Array.isArray(data.value)) w = [data.value]
 
-        try {
-            new FieldsContainer([
-                "array",
-                new FieldsContainer([
-                    ["event", "handler"],
-                    {
-                        event: new FieldChecker({ type: "string" }),
-                        handler: new FieldChecker({ type: "function" }),
-                        params: new FieldChecker({ type: "object" }),
-                    },
-                ]),
-            ]).set(w)
-        } catch (e) {
-            if (!DOMController.errorIgnore(unique)) throw new Error("Events must be CORRECT object")
-            return
-        }
+        w.forEach((e) => {
+            if (typeof e !== "object") throw new TypeError(`Event must be object, ${typeof e} given`)
+            if (typeof e.event !== "string") throw new TypeError("Event name (.event) must be string")
+            if (typeof e.handler !== "function") throw new TypeError("Event handler must be function")
+            if ("params" in e && typeof e.params !== "object") throw new TypeError("Event params must be object")
+        })
 
         w.forEach((e) => {
             try {

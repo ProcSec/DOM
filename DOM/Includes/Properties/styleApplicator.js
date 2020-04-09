@@ -1,5 +1,5 @@
 import DOMController from "@DOMPath/DOM/Helpers/domController"
-import camelCaseConverter from "@Core/Tools/transformation/text/camelCaseConverter"
+import camelCaseConverter from "@DOMPath/DOM/Helpers/lib/camelCaseConverter"
 
 export default (() => {
     const unique = "styleApplicator"

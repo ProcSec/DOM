@@ -1,5 +1,4 @@
 import DOMController from "@DOMPath/DOM/Helpers/domController"
-import Report from "@Core/Services/reportOld"
 import DOM from "@DOMPath/DOM/Classes/dom"
 
 DOMController.registerModificator({
@@ -12,7 +11,7 @@ DOMController.registerModificator({
                 this.elementParse.prepend(e)
                 this.content.add(e)
             } catch (er) {
-                Report.write("Prepend error", er)
+                DOMController.error("Prepend error", er)
             }
         })
     },

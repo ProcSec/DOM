@@ -1,6 +1,4 @@
 import DOMController from "@DOMPath/DOM/Helpers/domController"
-import FieldsContainer from "@Core/Tools/validation/fieldsContainer"
-import FieldChecker from "@Core/Tools/validation/fieldChecker"
 
 export default (() => {
     const unique = "mutationListener"
@@ -11,15 +9,10 @@ export default (() => {
     }
 
     const handler = (data) => {
-        new FieldsContainer(["array",
-            new FieldsContainer([
-                ["handler"],
-                {
-                    config: new FieldChecker({ type: "object" }),
-                    handler: new FieldChecker({ type: "function" }),
-                },
-            ]),
-        ]).set(data.value)
+        data.value.forEach((e) => {
+            if (typeof e.handler !== "function") throw new TypeError(`Observer handler must be function, ${typeof e} given`)
+            if ("config" in e && typeof e.config !== "object") throw new TypeError(`Observer config must be object, ${typeof e} given`)
+        })
 
         data.value.forEach((co) => {
             const mo = new MutationObserver(co.handler)

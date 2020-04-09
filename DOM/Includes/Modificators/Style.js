@@ -1,5 +1,5 @@
-import camelCaseConverter from "@Core/Tools/transformation/text/camelCaseConverter"
 import DOMController from "@DOMPath/DOM/Helpers/domController"
+import camelCaseConverter from "@DOMPath/DOM/Helpers/lib/camelCaseConverter"
 
 DOMController.registerModificator({
     name: "style",

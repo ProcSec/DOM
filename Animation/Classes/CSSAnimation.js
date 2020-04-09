@@ -1,5 +1,3 @@
-import Sleep from "../../../Tools/objects/sleep"
-
 export default class CSSAnimation {
     constructor({
         duration = 200,
@@ -19,7 +17,7 @@ export default class CSSAnimation {
         requestAnimationFrame(() => {
             el.style(self.end)
         })
-        await Sleep(this.duration)
+        await new Promise((resolve) => setTimeout(resolve, this.duration))
         return el
     }
 }

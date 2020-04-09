@@ -1,8 +1,5 @@
-import FieldsContainer from "../../../Tools/validation/fieldsContainer"
-import FieldChecker from "../../../Tools/validation/fieldChecker"
 import DomRegisteredProperty from "../Classes/domRegisteredProperty"
 import DomRegisteredModule from "../Classes/domRegisteredModule"
-import Report from "../../../Services/reportOld"
 import DOM from "../Classes/dom"
 
 export default class DOMController {
@@ -24,17 +21,13 @@ export default class DOMController {
 
     // #region Properties
     static registerProperty(property) {
-        if (this.#settings.config.reportRegistration === true) Report.write("New DOM property: ", property)
-        new FieldsContainer([
-            ["name", "required", "handler", "error", "unique"],
-            {
-                name: new FieldChecker({ type: "string", symbols: "a-zA-Z0-9" }),
-                required: new FieldChecker({ type: "boolean" }),
-                handler: new FieldChecker({ type: "function" }),
-                error: new FieldChecker({ type: "function" }),
-                unique: new FieldChecker({ type: "string", symbols: "a-zA-Z0-9" }),
-            },
-        ]).set(property)
+        if (this.#settings.config.reportRegistration === true) this.log("New DOM property: ", property)
+
+        if (typeof property.name !== "string" || !new RegExp("^[a-zA-Z0-9]+$").test(property.name)) throw new TypeError("Incorrect name")
+        if (typeof property.unique !== "string" || !new RegExp("^[a-zA-Z0-9]+$").test(property.unique)) throw new TypeError("Incorrect unique")
+        if (typeof property.required !== "boolean") throw new TypeError("Required must be boolean")
+        if (typeof property.handler !== "function") throw new TypeError("Handler must be function")
+        if (typeof property.error !== "function") throw new TypeError("Error must be function")
 
         let compMethod
 
@@ -55,7 +48,7 @@ export default class DOMController {
     }
 
     static getPropertyData(id) {
-        new FieldChecker({ isInt: true }).set(id)
+        if (!Number.isInteger(id)) throw new TypeError("ID must be integer")
 
         const g = this.#settings.properties[id]
         if (typeof g === "object") return g
@@ -70,12 +63,8 @@ export default class DOMController {
 
     // #region Modules
     static registerModule(module) {
-        new FieldsContainer([
-            ["onRender"],
-            {
-                onRender: new FieldChecker({ type: "function" }),
-            },
-        ]).set(module)
+        if (typeof module !== "object"
+            || typeof module.onRender !== "function") throw new TypeError("Incorrect module")
 
         const id = this.#settings.modules.length
         this.#settings.modules.push()
@@ -84,7 +73,7 @@ export default class DOMController {
     }
 
     static getModuleData(id) {
-        new FieldChecker({ isInt: true }).set(id)
+        if (!Number.isInteger(id)) throw new TypeError("ID must be integer")
 
         const g = this.#settings.modules[id]
         if (typeof g === "object") return g
@@ -102,7 +91,7 @@ export default class DOMController {
     }
 
     static setConfig(v) {
-        new FieldChecker({ type: "object" }).set(v)
+        if (typeof v !== "object") throw new TypeError("Config must be object")
         this.#settings.config = { ...this.#settings.config, ...v }
     }
 
@@ -124,7 +113,7 @@ export default class DOMController {
             this.#settings.errorsIgnore = n
             return true
         }
-        new FieldsContainer(["array", new FieldChecker({ type: "string" })]).set(n)
+        if (!n.every((e) => typeof e === "string")) throw new TypeError("Every item must be string")
         this.#settings.errorsIgnore = n
         return true
     }
@@ -132,19 +121,9 @@ export default class DOMController {
     static registerModificator({
         name, handler, get, set,
     }) {
-        new FieldsContainer([
-            ["name"],
-            {
-                name: new FieldChecker({
-                    type: "string",
-                    symbols: "a-zA-Z",
-                    min: 3,
-                    max: 20,
-                }),
-            },
-        ]).set({
-            name,
-        })
+        if (typeof name !== "string") throw new TypeError(`Modificator name must be string, ${typeof name} given`)
+        if (!new RegExp("^[a-zA-Z]{3,20}$").test(name)) throw new TypeError("Incorrect Modificator name")
+
 
         if (this.#settings.modificators[name] !== undefined
             || name in DOM.prototype) throw new Error(`Method ${name} is already declared`)
@@ -169,5 +148,20 @@ export default class DOMController {
 
     static getModificators() {
         return this.#settings.modificators
+    }
+
+    static log(...data) {
+        const event = new CustomEvent("DOMController-Report", { detail: { type: "log", data } })
+        window.dispatchEvent(event)
+    }
+
+    static error(...data) {
+        const event = new CustomEvent("DOMController-Report", { detail: { type: "error", data } })
+        window.dispatchEvent(event)
+    }
+
+    static warn(...data) {
+        const event = new CustomEvent("DOMController-Report", { detail: { type: "warn", data } })
+        window.dispatchEvent(event)
     }
 }

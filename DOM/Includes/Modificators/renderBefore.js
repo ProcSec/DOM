@@ -1,5 +1,4 @@
 import DOMController from "@DOMPath/DOM/Helpers/domController"
-import Report from "@Core/Services/reportOld"
 import DOM from "@DOMPath/DOM/Classes/dom"
 
 DOMController.registerModificator({
@@ -11,7 +10,7 @@ DOMController.registerModificator({
                 if (typeof e === "string") e = new DOM({ type: "text", new: e })
                 this.elementParse.insertBefore(e)
             } catch (er) {
-                Report.write("Render error", er)
+                DOMController.error("Render error", er)
             }
         })
     },

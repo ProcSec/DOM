@@ -1,23 +1,14 @@
-import FieldsContainer from "../../../Tools/validation/fieldsContainer"
-import FieldChecker from "../../../Tools/validation/fieldChecker"
 import Linear from "../Library/Timing/linear"
 
 export default class Animation {
     constructor({
         duration, painter = () => { }, init = () => { }, end = () => { }, timingFunc = Linear,
     }) {
-        new FieldsContainer([
-            ["duration", "timingFunc"],
-            {
-                duration: new FieldChecker({ type: "number", isInt: "true" }),
-                painter: new FieldChecker({ type: "function" }),
-                timingFunc: new FieldChecker({ type: "function" }),
-                init: new FieldChecker({ type: "function" }),
-                end: new FieldChecker({ type: "function" }),
-            },
-        ]).set({
-            duration, painter, timingFunc, init, end,
-        })
+        if (typeof duration !== "number" || !Number.isInteger(duration)) throw new Error(`Duration must be integer, ${typeof duration} given`)
+        if (typeof painter !== "function") throw new Error(`painter must be function, ${typeof painter} given`)
+        if (typeof timingFunc !== "function") throw new Error(`timingFunc must be function, ${typeof timingFunc} given`)
+        if (typeof init !== "function") throw new Error(`init must be function, ${typeof init} given`)
+        if (typeof end !== "function") throw new Error(`end must be function, ${typeof end} given`)
 
         this.duration = duration
         this.painter = painter

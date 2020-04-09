@@ -1,6 +1,4 @@
 import DOMController from "@DOMPath/DOM/Helpers/domController"
-import FieldsContainer from "@Core/Tools/validation/fieldsContainer"
-import FieldChecker from "@Core/Tools/validation/fieldChecker"
 
 export default (() => {
     const unique = "onResize"
@@ -11,9 +9,9 @@ export default (() => {
     }
 
     const handler = (data) => {
-        new FieldsContainer(["array",
-            new FieldChecker({ type: "function" }),
-        ]).set(data.value)
+        data.value.forEach((e) => {
+            if (typeof e !== "function") throw new TypeError(`Handlers must be  of type function, ${typeof e} given`)
+        })
 
         data.value.forEach((co) => {
             const mo = new ResizeObserver(co)

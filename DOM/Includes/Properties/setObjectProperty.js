@@ -1,6 +1,4 @@
 import DOMController from "@DOMPath/DOM/Helpers/domController"
-import FieldsContainer from "@Core/Tools/validation/fieldsContainer"
-import FieldChecker from "@Core/Tools/validation/fieldChecker"
 
 export default (() => {
     const unique = "objectPropertySetter"
@@ -19,19 +17,8 @@ export default (() => {
                 name, handler, set, get,
             } = e
 
-            new FieldsContainer([
-                ["name"],
-                {
-                    name: new FieldChecker({
-                        type: "string",
-                        symbols: "a-zA-Z",
-                        min: 3,
-                        max: 20,
-                    }),
-                },
-            ]).set({
-                name,
-            })
+            if (typeof name !== "string") throw new TypeError(`ObjectProperty name must be string, ${typeof name} given`)
+            if (!new RegExp("^[a-zA-Z]{3,20}$").test(name)) throw new TypeError("Incorrect objectProperty name")
 
             if (name in self) throw new Error(`Method ${name} is already declared`)
 

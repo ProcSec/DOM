@@ -1,7 +1,4 @@
-import FieldChecker from "../../../Tools/validation/fieldChecker"
 import DOMController from "../Helpers/domController"
-import FieldsContainer from "../../../Tools/validation/fieldsContainer"
-import Report from "../../../Services/reportOld"
 
 export default class DOM {
     elementParse = null
@@ -17,10 +14,10 @@ export default class DOM {
     content = new Set()
 
     constructor(object) {
-        new FieldChecker({ type: "object" }).set(object)
+        if (typeof object !== "object") throw new TypeError(`DOM accepts object as an argument, ${typeof object} given`)
         this.object = object
 
-        this.onEvent("render", (c = {}) => (c.asContent ? this.moduleWorkerOnRender : () => {}))
+        this.onEvent("render", (c = {}) => (c.asContent ? this.moduleWorkerOnRender : () => { }))
         this.onEvent("render", () => {
             this.content.forEach((e) => {
                 if (typeof e.emitEvent === "function") { e.emitEvent("render", { asContent: true }) }
@@ -37,13 +34,8 @@ export default class DOM {
     }
 
     onEvent(event, handler) {
-        new FieldsContainer([
-            ["event", "handler"],
-            {
-                event: new FieldChecker({ type: "string", min: 1 }),
-                handler: new FieldChecker({ type: "function" }),
-            },
-        ]).set({ event, handler })
+        if (typeof event !== "string" || event.length < 1) throw new TypeError(`Incorrect DOM Event name. ${typeof event}${typeof event === "string" ? `(${event.length})` : ""} given`)
+        if (typeof handler !== "function") throw new TypeError(`DOM Event handler must be function. ${typeof handler} given`)
 
         if (!(event in this.events) || !Array.isArray(this.events[event])) this.events[event] = []
 
@@ -51,13 +43,9 @@ export default class DOM {
     }
 
     emitEvent(event, data = {}) {
-        new FieldsContainer([
-            ["event", "data"],
-            {
-                event: new FieldChecker({ type: "string", min: 1 }),
-                data: new FieldChecker({ type: "object" }),
-            },
-        ]).set({ event, data })
+        if (typeof event !== "string" || event.length < 1) throw new TypeError(`Incorrect DOM Event name. ${typeof event}${typeof event === "string" ? `(${event.length})` : ""} given`)
+        if (typeof data !== "object") throw new TypeError(`DOM Event object must be of type object. ${typeof data} given`)
+
 
         if (!(event in this.events) || !Array.isArray(this.events[event])) return
 
@@ -97,7 +85,7 @@ export default class DOM {
                         },
                     })
                 } catch (e) {
-                    Report.write("DOM Property error", e)
+                    DOMController.error("DOM Property error", e)
                     r = p.error.bind(this)({
                         element: el,
                         value: o[p.name],

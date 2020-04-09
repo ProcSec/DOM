@@ -1,5 +1,3 @@
-import FieldsContainer from "@Core/Tools/validation/fieldsContainer"
-import FieldChecker from "@Core/Tools/validation/fieldChecker"
 import DOMController from "@DOMPath/DOM/Helpers/domController"
 
 DOMController.registerModificator({
@@ -8,21 +6,12 @@ DOMController.registerModificator({
         const single = !Array.isArray(w)
         if (!Array.isArray(w)) w = [w]
 
-        try {
-            new FieldsContainer([
-                "array",
-                new FieldsContainer([
-                    ["event", "handler"],
-                    {
-                        event: new FieldChecker({ type: "string" }),
-                        handler: new FieldChecker({ type: "function" }),
-                        params: new FieldChecker({ type: "object" }),
-                    },
-                ]),
-            ]).set(w)
-        } catch (e) {
-            throw new Error("Events must be CORRECT object")
-        }
+        w.forEach((e) => {
+            if (typeof e !== "object") throw new TypeError(`Event must be object, ${typeof e} given`)
+            if (typeof e.event !== "string") throw new TypeError("Event name (.event) must be string")
+            if (typeof e.handler !== "function") throw new TypeError("Event handler must be function")
+            if ("params" in e && typeof e.params !== "object") throw new TypeError("Event params must be object")
+        })
 
         const result = w.map((e) => {
             try {

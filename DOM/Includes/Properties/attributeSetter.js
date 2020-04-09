@@ -1,7 +1,5 @@
 import DOMController from "@DOMPath/DOM/Helpers/domController"
 import DOM from "@DOMPath/DOM/Classes/dom"
-import FieldsContainer from "@Core/Tools/validation/fieldsContainer"
-import FieldChecker from "@Core/Tools/validation/fieldChecker"
 
 export default (() => {
     const unique = "attributeSetter"
@@ -44,10 +42,9 @@ export default (() => {
                 }
             }
 
-            new FieldsContainer([
-                ["name", "value"],
-                { name: new FieldChecker({ type: "string" }) },
-            ]).set(attr)
+            if (typeof attr.name !== "string") throw new TypeError(`Attribute name must be string, ${typeof attr.name} given`)
+            if (!("value" in attr)) attr.value = ""
+            attr.value = String(attr.value)
 
             data.element.native.setAttribute(attr.name, attr.value)
         })
