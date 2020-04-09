@@ -33,14 +33,14 @@ export default (() => {
         data.value.forEach((attr) => {
             if (attr instanceof DOM) {
                 if (data.config.allowDeprecatedAttributeConstructor !== true
-                    || attr.elementParse.get("nodeType") !== 2) {
+                    || attr.elementParse.native.nodeType !== 2) {
                     error()
                     return
                 }
 
                 attr = {
-                    name: attr.elementParse.get("nodeName"),
-                    value: attr.elementParse.get("value"),
+                    name: attr.elementParse.native.nodeName,
+                    value: attr.elementParse.native.value,
                 }
             }
 

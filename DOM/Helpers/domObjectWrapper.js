@@ -1,26 +1,6 @@
 import DOM from "../Classes/dom"
 
-// TODO: use reflect
-
 const DOMObjectWrapper = (El) => {
-    const goDeeper = (o, e) => o[e]
-
-    const toTheBottom = (o, els, i = 0) => {
-        if (typeof els === "string") {
-            els = [els]
-        } else if (Array.isArray(els)) {
-            els = Array.from(els)
-        } else {
-            els = false
-        }
-        if (typeof o !== "object" || els === false) throw new TypeError("Incorrect parameters")
-        while (els.length > i) {
-            o = goDeeper(o, els.pop())
-        }
-
-        return o
-    }
-
     const methods = {
         render: {
             value: (e) => {
@@ -70,24 +50,8 @@ const DOMObjectWrapper = (El) => {
             },
             writable: false,
         },
-        name: {
-            value: "DOMObjectWrapper",
-            writable: false,
-        },
         native: {
             get() { return Object.getPrototypeOf(this) },
-        },
-        set: {
-            value: (e, p) => {
-                const g = toTheBottom(El, e, 1)
-                g[e[e.length - 1]] = p
-                return g[e[e.length - 1]]
-            },
-            writable: false,
-        },
-        get: {
-            value: (e) => toTheBottom(El, e),
-            writable: false,
         },
     }
 
