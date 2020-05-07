@@ -11,7 +11,7 @@ export default (() => {
     const handler = (data) => {
         if (!Array.isArray(data.value)) data.value = [data.value]
         data.value.forEach((e) => {
-            if (typeof e !== "function") throw new TypeError(`Handlers must be  of type function, ${typeof e} given`)
+            if (typeof e !== "function") throw new TypeError(`Handlers must be of type function, ${typeof e} given`)
         })
 
         data.value.forEach((co) => {
