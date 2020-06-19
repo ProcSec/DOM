@@ -8,7 +8,7 @@ export default (() => {
         return data.element
     }
 
-    const handler = (data) => {
+    function handler(data) {
         if (!Array.isArray(data.value)) data.value = [data.value]
         data.value.forEach((e) => {
             if (typeof e !== "function") throw new TypeError(`Handlers must be of type function, ${typeof e} given`)
@@ -16,7 +16,7 @@ export default (() => {
 
         data.value.forEach((co) => {
             data.event.on("rendered", (...params) => {
-                co(...params)
+                co.bind(this)(...params)
             })
         })
     }

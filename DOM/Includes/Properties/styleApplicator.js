@@ -14,8 +14,6 @@ export default (() => {
 
         Object.keys(data.value).forEach((e) => {
             try {
-                if (!(e in data.element.native.style)) return
-
                 const value = data.value[e].toString()
                 const r = value.match(/^(.+) !important$/)
                 data.element.native.style.setProperty(camelCaseConverter(e, "-", true), (r ? r[1] : value), (r ? "important" : ""))

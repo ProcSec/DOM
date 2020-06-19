@@ -14,7 +14,7 @@ export default (() => {
 
         data.value.forEach((e) => {
             const {
-                name, handler, set, get,
+                name, handler, set, get, writable = false, configurable = false,
             } = e
 
             if (typeof name !== "string") throw new TypeError(`ObjectProperty name must be string, ${typeof name} given`)
@@ -24,7 +24,7 @@ export default (() => {
 
             Object.defineProperty(self, name,
                 {
-                    ...(handler ? { value: handler, writable: false } : {}),
+                    ...(handler !== undefined ? { value: handler, writable, configurable } : {}),
                     ...(get ? { get } : {}),
                     ...(set ? { set } : {}),
                 })
