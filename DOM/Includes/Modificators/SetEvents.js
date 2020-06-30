@@ -24,6 +24,12 @@ DOMController.registerModificator({
                     }, (e.params ? e.params : {}),
                 ]
 
+                if (DOMController.config.eventsOnClickAutoTabIndex === true
+                    && ["click"]
+                        .includes(e.event)) {
+                    this.elementParse.native.tabIndex = 0
+                }
+
                 this.elementParse.native.addEventListener(...eventSetParams)
 
                 return {
